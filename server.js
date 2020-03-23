@@ -9,6 +9,8 @@ const bodyParser = require('body-parser');
 const api = require('./routes/api');
 
 const app = express();
+
+// See https://medium.com/@alexishevia/using-cors-in-express-cac7e29b005b
 app.use(cors());
 
 // Parsers for POST data
