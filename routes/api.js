@@ -1,61 +1,77 @@
 // Import dependencies
-const mongoose = require('mongoose');
+
+const { Sequelize, DataTypes } = require('sequelize');
 const express = require('express');
 const router = express.Router();
 
-// MongoDB URL from the docker-compose file
-const dbHost = 'mongodb://database/mean-strava';
+var sequelize = new Sequelize('postgres', 'postgres', 'docker', {
+    host: 'database',
+    dialect: 'postgres',
 
-// Connect to mongodb
-mongoose.connect(dbHost);
-
-// Create mongoose schema
-const userSchema = new mongoose.Schema({
-  name: String,
-  age: Number
+    pool: {
+        max: 5,
+        min: 0,
+        idle: 10000
+    },
 });
 
-// Create mongoose model
-const User = mongoose.model('User', userSchema);
+//Check the database connection
+sequelize
+    .authenticate()
+    .then(function (err) {
+        console.log('Connection has been established successfully.');
+    })
+    .catch(function (err) {
+        console.log('Unable to connect to the database:', err);
+    });
 
+// Define a user type  
+var User = sequelize.define('user', {
+    name: {
+        type: DataTypes.STRING
+    },
+    age: {
+        type: DataTypes.SMALLINT
+    }
+});
+
+// Create empty Users table
+User.sync({ force: true }).then(function () {
+});
 
 // GET api listing.
 router.get('/', (req, res) => {
-        res.send('api works');
+    res.send('api works');
 });
 
 // GET all users.
 router.get('/users', (req, res) => {
-    User.find({}, (err, users) => {
-        if (err) res.status(500).send(error)
+    User.findAll().then(users => res.json(users));
+});
 
-        res.status(200).json(users);
+
+// Create a user and pass it to the db
+router.post('/users', function (request, response) {
+    return User.create({
+        name: request.body.name,
+        age: request.body.age
+    }).then(function (User) {
+        if (User) {
+            response.send(User);
+        } else {
+            response.status(400).send('Error in insert new record');
+        }
     });
 });
 
-// GET one users.
-router.get('/users/:id', (req, res) => {
-    User.findById(req.param.id, (err, users) => {
-        if (err) res.status(500).send(error)
-
-        res.status(200).json(users);
-    });
-});
-
-// Create a user.
-router.post('/users', (req, res) => {
-    let user = new User({
-        name: req.body.name,
-        age: req.body.age
-    });
-
-    user.save(error => {
-        if (error) res.status(500).send(error);
-
-        res.status(201).json({
-            message: 'User created successfully'
-        });
-    });
-});
+ // GET one user by id
+ router.get('/users/:id', (req, res) => {
+    const id = req.params.id;
+    console.log(id);
+    User.findByPk(id)
+      .then(user => {
+        res.json(user);
+      });
+  });
 
 module.exports = router;
