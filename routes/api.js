@@ -67,7 +67,6 @@ router.post('/users', function (request, response) {
  // GET one user by id
  router.get('/users/:id', (req, res) => {
     const id = req.params.id;
-    console.log(id);
     User.findByPk(id)
       .then(user => {
         res.json(user);
