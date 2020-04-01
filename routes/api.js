@@ -64,13 +64,22 @@ router.post('/users', function (request, response) {
     });
 });
 
- // GET one user by id
- router.get('/users/:id', (req, res) => {
+// GET one user by id
+router.get('/users/:id', (req, res) => {
     const id = req.params.id;
     User.findByPk(id)
-      .then(user => {
-        res.json(user);
-      });
-  });
+        .then(user => {
+            res.json(user);
+        });
+});
+
+// Delete one user by id
+router.delete('/users/:id', (req, res) => {
+    const id = req.params.id;
+    User.destroy({ where: { id: id } })
+        .then(user => {
+            res.json(user);
+        });
+});
 
 module.exports = router;
