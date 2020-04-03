@@ -1,0 +1,19 @@
+{
+    "database": {
+      "user": "ao_user",
+      "password": "This-password-is-4-developer-use-only",
+      "server": "localhost",
+      "database": "fdd",
+      "options": {
+        "useUTC": false
+      }
+    },
+    "server": {
+      "port": "3000"
+    },
+    "security": {
+      "authentication": false,
+      "authorizationGroup": "NDC\\app-author-organization",
+      "defaultUserName": "UnauthenticatedUser"
+    }
+  }
