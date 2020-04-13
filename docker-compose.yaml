@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  backend:
+    build: .
+    ports:
+      - "3000:3000"
+      - "9229:9229"
+    container_name: pean-back-container
+    #restart: always
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules # exclude from volume
+    links:
+      - database
+
+  database:
+    image: 'postgres:11.5-alpine'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=docker
+      - POSTGRESS_DB=postgres
+    ports:
+      - "5432:5432"
+    container_name: pean-database-container
+    #restart: always
