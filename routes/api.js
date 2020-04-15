@@ -1,11 +1,16 @@
 // Import dependencies
+require('dotenv').config();
+const DATABASE_NAME = process.env.DATABASE_NAME || 'postgres';
+const DATABASE_USERNAME = process.env.DATABASE_USERNAME || 'postgres';
+const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD || 'docker';
+const DATABASE_HOST = process.env.DATABASE_HOST || 'database';
 
 const { Sequelize, DataTypes } = require('sequelize');
 const express = require('express');
 const router = express.Router();
 
-var sequelize = new Sequelize('postgres', 'postgres', 'docker', {
-    host: 'database',
+var sequelize = new Sequelize(DATABASE_NAME, DATABASE_USERNAME, DATABASE_PASSWORD, {
+    host: DATABASE_HOST,
     dialect: 'postgres',
 
     pool: {
@@ -18,7 +23,7 @@ var sequelize = new Sequelize('postgres', 'postgres', 'docker', {
 //Check the database connection
 sequelize
     .authenticate()
-    .then(function (err) {
+    .then(function () {
         console.log('Connection has been established successfully.');
     })
     .catch(function (err) {
@@ -82,7 +87,7 @@ const Address = sequelize.define('address', {
 });
 
 (async () => {
-    await Address.sync({ force: true })
+    await Address.sync({ force: true });
     Address.belongsTo(User, {onDelete: 'SET NULL', onUpdate: 'CASCADE' });
 })().catch(function (err) {
     console.log('Unable to create table:', err);
