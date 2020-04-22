@@ -38,7 +38,7 @@ app.use('/api/accounts', require('routes/accounts/account.controller'));
 
 // ===== Start server =====
 const server = app.listen(BACKEND_PORT, function () {
-    console.log('Server not listening on port ' + BACKEND_PORT);
+    console.log('Server listening on port ' + BACKEND_PORT);
 });
 
 // Shutdown error handler -- logs and shuts down gracefully.

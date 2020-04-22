@@ -7,7 +7,7 @@ services:
       - "3000:3000"
       - "9229:9229"
     container_name: pean-back-container
-    #restart: always
+    restart: always
     volumes:
       - ./:/usr/src/app
       - /usr/src/app/node_modules # exclude from volume
@@ -23,4 +23,4 @@ services:
     ports:
       - "5432:5432"
     container_name: pean-database-container
-    #restart: always
+    restart: always
